@@ -103,7 +103,14 @@ export default function CinematicVideo({
   return (
     <div
       ref={containerRef}
-      className={`relative overflow-hidden ${className}`}
+      // No hardcoded `relative` here on purpose: every current caller passes
+      // `absolute inset-0` via `className`, and Tailwind's position utilities
+      // conflict when both `relative` and `absolute` land on the same
+      // element (same specificity — whichever is defined later in Tailwind's
+      // own stylesheet wins the cascade, not whichever is listed later in
+      // this string) collapsing the whole video/poster to zero height. The
+      // caller's className is required to supply its own position utility.
+      className={`overflow-hidden ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
