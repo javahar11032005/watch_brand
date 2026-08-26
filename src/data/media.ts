@@ -79,13 +79,9 @@ export const media = {
     } satisfies MediaAsset,
   },
   /**
-   * The single site-level campaign film (hero, "The First Impression", and
-   * the shared "Watch Film" clip on every product page) — a real,
-   * self-hosted file under /public/videos, not a YouTube embed, so there is
-   * no third-party branding anywhere in the video experience. Swap the
-   * asset later by replacing the file and/or updating this path; per-
-   * product footage can be added the same way by pointing individual
-   * products at their own file instead of this shared one.
+   * The homepage hero's background film — a real, self-hosted file under
+   * /public/videos, not a YouTube embed, so there is no third-party
+   * branding anywhere in the video experience.
    */
   hero: {
     videoSrc: "/videos/watches/homepage.mp4",
@@ -95,6 +91,16 @@ export const media = {
     // The film plays on top of this once it starts; if it never does
     // (slow network, missing file), this is what stays on screen.
     posterUrl: unsplash("photo-1598640877587-bd8f35df4021", "q=85&w=2400&auto=format&fit=crop"),
+  },
+  /**
+   * The shared "Watch Film" clip on every product page — a separate asset
+   * from the hero film (originally provided as wrist1.mov; renamed to .mp4
+   * since the video/audio tracks are already H.264/AAC and Chrome/Firefox
+   * are unreliable about the video/quicktime MIME type even when the codec
+   * itself is fully supported).
+   */
+  productFilm: {
+    videoSrc: "/videos/watches/product-film.mp4",
   },
 } as const;
 
@@ -107,15 +113,9 @@ export function productMedia(slug: string): MediaAsset {
 }
 
 /**
- * Every "Watch Film" currently plays the same verified clip as the hero —
- * a prior attempt sourced a distinct clip per product from stock footage,
- * but 3 of 4 turned out to visibly show a real competing brand's name on
- * the dial or movement (checked by pulling each clip's preview frame, not
- * just its title/description), and one didn't show a watch at all. Rather
- * than ship unverified footage, every slug points at the one clip that was
- * actually inspected frame-by-frame and is clean. Swap in verified,
- * per-product footage later by branching on `slug` here.
+ * Every "Watch Film" currently plays the same clip across all products —
+ * swap in verified, per-product footage later by branching on `slug` here.
  */
 export function productVideoSrc(hasFilm: string | null): string | null {
-  return hasFilm ? media.hero.videoSrc : null;
+  return hasFilm ? media.productFilm.videoSrc : null;
 }
