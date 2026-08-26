@@ -47,11 +47,11 @@ function buildVariants(
 }
 
 const IMG = {
-  meridianOne: "https://images.unsplash.com/photo-1633451238208-11c8e6c1fed4?q=80&w=2000&auto=format&fit=crop",
-  meridianNocturne: "https://images.unsplash.com/photo-1567093322102-6bdd32fba67d?q=80&w=2000&auto=format&fit=crop",
-  meridianChrono: "https://images.unsplash.com/photo-1598640877587-bd8f35df4021?q=80&w=2000&auto=format&fit=crop",
-  meridianAtelier: "https://images.unsplash.com/photo-1760532466984-39c3eb7f1254?q=80&w=2000&auto=format&fit=crop",
-  meridianAutomatic: "https://images.unsplash.com/photo-1578934856768-78cbeac965c7?q=80&w=2000&auto=format&fit=crop",
+  meridianOne: "/images/watches/meridian-one.webp",
+  meridianNocturne: "/images/watches/meridian-nocturne.webp",
+  meridianChrono: "/images/watches/meridian-chrono.webp",
+  meridianAtelier: "/images/watches/meridian-atelier.webp",
+  meridianAutomatic: "/images/watches/meridian-automatic.webp",
   gears: "https://images.unsplash.com/photo-1567093322102-6bdd32fba67d?q=80&w=2000&auto=format&fit=crop",
   movement: "https://images.unsplash.com/photo-1633451238208-11c8e6c1fed4?q=80&w=2000&auto=format&fit=crop",
 };
