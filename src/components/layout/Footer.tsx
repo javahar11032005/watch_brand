@@ -8,7 +8,6 @@ const COLUMNS = [
     title: "Brand",
     links: [
       { label: "Our Story", href: "/#story" },
-      { label: "Craftsmanship", href: "/#craftsmanship" },
       { label: "Private Viewing", href: "/#viewing" },
       { label: "Contact", href: "mailto:atelier@kestrelwatch.co" },
     ],

@@ -1,8 +1,6 @@
 import Hero from "@/components/hero/Hero";
 import VideoSection from "@/components/video/VideoSection";
-import WatchIntro from "@/components/story/WatchIntro";
-import ScrollStory from "@/components/story/ScrollStory";
-import CraftsmanshipJourney from "@/components/craftsmanship/CraftsmanshipJourney";
+import OurStory from "@/components/story/OurStory";
 import PrecisionStats from "@/components/craftsmanship/PrecisionStats";
 import CollectionTeaser from "@/components/collection/CollectionTeaser";
 import ConfiguratorSection from "@/components/configurator/ConfiguratorSection";
@@ -15,9 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <VideoSection />
-      <WatchIntro />
-      <ScrollStory />
-      <CraftsmanshipJourney />
+      <OurStory />
       <PrecisionStats />
       <CollectionTeaser />
       <ConfiguratorSection />

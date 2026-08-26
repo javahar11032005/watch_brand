@@ -79,7 +79,7 @@ export default function Hero() {
             Explore the Collection
           </Link>
           <Link
-            href="#craft"
+            href="#story"
             className="px-7 py-3.5 text-xs tracking-[0.2em] uppercase border border-ivory/30 hover:border-champagne hover:text-champagne transition-colors focus-ring"
           >
             Discover the Craft

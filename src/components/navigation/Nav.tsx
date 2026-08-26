@@ -10,8 +10,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 
 const LINKS = [
   { label: "Collection", href: "/collection" },
-  { label: "Craftsmanship", href: "/#craftsmanship" },
-  { label: "Story", href: "/#story" },
+  { label: "Our Story", href: "/#story" },
   { label: "Atelier", href: "/#configurator" },
 ];
 
