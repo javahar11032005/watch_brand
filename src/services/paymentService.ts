@@ -54,6 +54,21 @@ export async function createCheckoutSession(orderId: string, origin: string) {
   return session;
 }
 
+/**
+ * Fallback path for local development, where there's no public URL for
+ * Stripe to send webhooks to. The webhook (`markOrderPaidFromSession`
+ * driven by `checkout.session.completed`) stays the source of truth in any
+ * environment that has one configured — this only fires when the success
+ * page loads, and re-fetches the session from Stripe's API directly (never
+ * trusts the redirect alone) before marking anything paid.
+ */
+export async function verifyAndSyncSession(sessionId: string) {
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+  if (session.payment_status === "paid") {
+    await markOrderPaidFromSession(session);
+  }
+}
+
 export async function markOrderPaidFromSession(session: Stripe.Checkout.Session) {
   const orderId = session.metadata?.orderId;
   if (!orderId) return;

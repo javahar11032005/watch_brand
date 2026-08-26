@@ -1,17 +1,28 @@
 import { notFound } from "next/navigation";
 import { getOrderById } from "@/services/orderService";
+import { verifyAndSyncSession } from "@/services/paymentService";
 import { getSession } from "@/lib/session";
 import { formatPrice, formatDate, labelCaseMaterial, labelDialColor, labelStrapMaterial } from "@/lib/format";
 import { LinkButton } from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 
 type PageProps = {
-  searchParams: Promise<{ orderId?: string; paymentUnavailable?: string }>;
+  searchParams: Promise<{ orderId?: string; session_id?: string; paymentUnavailable?: string }>;
 };
 
 export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
-  const { orderId, paymentUnavailable } = await searchParams;
+  const { orderId, session_id, paymentUnavailable } = await searchParams;
   if (!orderId) notFound();
+
+  // The webhook is the real source of truth in any environment that has
+  // one configured (e.g. after deploying, via the Stripe dashboard). This
+  // is the local-dev fallback: re-fetch the session from Stripe's API
+  // directly — never trust the redirect alone — so a real test payment
+  // shows as PAID immediately even without a webhook endpoint reachable
+  // from Stripe.
+  if (session_id) {
+    await verifyAndSyncSession(session_id).catch((err) => console.error("Stripe session verification failed", err));
+  }
 
   const order = await getOrderById(orderId).catch(() => null);
   if (!order) notFound();
