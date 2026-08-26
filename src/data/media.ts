@@ -112,21 +112,15 @@ export function productMedia(slug: string): MediaAsset {
 }
 
 /**
- * Each watch has its own distinct "Watch Film" clip under
- * /public/videos/watches — never the shared hero campaign film. Add a new
- * product's footage by dropping a file in that folder and adding its slug
- * here; a slug with no entry falls back to the shared hero clip rather than
- * showing nothing.
+ * Every "Watch Film" currently plays the same verified clip as the hero —
+ * a prior attempt sourced a distinct clip per product from stock footage,
+ * but 3 of 4 turned out to visibly show a real competing brand's name on
+ * the dial or movement (checked by pulling each clip's preview frame, not
+ * just its title/description), and one didn't show a watch at all. Rather
+ * than ship unverified footage, every slug points at the one clip that was
+ * actually inspected frame-by-frame and is clean. Swap in verified,
+ * per-product footage later by branching on `slug` here.
  */
-const PRODUCT_VIDEO_BY_SLUG: Record<string, string> = {
-  "meridian-one": "/videos/watches/meridian-one.mp4",
-  "meridian-nocturne": "/videos/watches/meridian-nocturne.mp4",
-  "meridian-chrono": "/videos/watches/meridian-chrono.mp4",
-  "meridian-atelier": "/videos/watches/meridian-atelier.mp4",
-  "meridian-automatic": media.hero.videoSrc,
-};
-
-export function productVideoSrc(hasFilm: string | null, slug?: string): string | null {
-  if (!hasFilm) return null;
-  return (slug && PRODUCT_VIDEO_BY_SLUG[slug]) || media.hero.videoSrc;
+export function productVideoSrc(hasFilm: string | null): string | null {
+  return hasFilm ? media.hero.videoSrc : null;
 }
