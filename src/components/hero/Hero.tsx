@@ -27,14 +27,13 @@ export default function Hero() {
     >
       <motion.div className="absolute inset-0" style={{ scale, opacity }}>
         <CinematicVideo
-          youtubeId={media.hero.youtubeId}
+          videoSrc={media.hero.videoSrc}
           posterUrl={media.hero.posterUrl}
           posterAlt={media.hero.posterAlt}
           mode="background"
           className="absolute inset-0"
           title={media.hero.title}
           priority
-          lazy={false}
         />
       </motion.div>
 

@@ -1,30 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useYouTubePlayer } from "@/hooks/useYouTubePlayer";
-import { useInView } from "@/hooks/useInView";
 
 export type CinematicVideoMode = "background" | "hover-preview" | "click-to-play";
 
-const HOVER_QUERY = "(hover: hover) and (pointer: fine)";
-function subscribeHover(callback: () => void) {
-  const mql = window.matchMedia(HOVER_QUERY);
-  mql.addEventListener("change", callback);
-  return () => mql.removeEventListener("change", callback);
-}
-function useSupportsHover(): boolean {
-  return useSyncExternalStore(
-    subscribeHover,
-    () => window.matchMedia(HOVER_QUERY).matches,
-    () => false
-  );
-}
-
 type CinematicVideoProps = {
-  youtubeId?: string | null;
+  /** Local file under /public, e.g. "/videos/hero-movement.mp4". Never a YouTube id — this is a real <video> element, so there is no external branding to fight. */
+  videoSrc?: string | null;
   posterUrl: string;
   posterAlt: string;
   mode?: CinematicVideoMode;
@@ -32,28 +17,20 @@ type CinematicVideoProps = {
   overlay?: React.ReactNode;
   title?: string;
   priority?: boolean;
-  /**
-   * Set false for anything that must start the instant it mounts (the
-   * hero) — skips the IntersectionObserver gate entirely. Defaults to
-   * true (lazy) for everything below the fold, per the "don't autoplay
-   * everything at once" performance requirement.
-   */
-  lazy?: boolean;
 };
 
 /**
- * A single reusable, failure-proof wrapper around a YouTube video: the
- * poster image is always the base layer, and the player only ever fades in
- * on top once it has genuinely confirmed playback (real IFrame Player API
- * state, not just "the iframe document loaded"). Any error, timeout, or
- * missing id quietly leaves the poster exactly as it was — never YouTube's
- * own "Video unavailable" UI, never an empty box.
+ * A single reusable video wrapper built on a plain, self-hosted <video>
+ * element — no third-party player, no YouTube branding of any kind, and no
+ * script to load before playback can start. The poster is always the base
+ * layer; the video only fades in once it has actually started decoding
+ * frames, so a slow network or missing file never shows an empty box.
  *
- * Swap footage later by changing `youtubeId` (see src/data/media.ts and
- * Product.videoId) — pass null/undefined to always show `posterUrl`.
+ * Swap footage later by changing `videoSrc` (see src/data/media.ts) — pass
+ * null/undefined to always show `posterUrl` with no video at all.
  */
 export default function CinematicVideo({
-  youtubeId,
+  videoSrc,
   posterUrl,
   posterAlt,
   mode = "background",
@@ -61,54 +38,38 @@ export default function CinematicVideo({
   overlay,
   title = "Kestrel Watch Co.",
   priority = false,
-  lazy = true,
 }: CinematicVideoProps) {
   const reducedMotion = useReducedMotion();
-  const supportsHover = useSupportsHover();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const playerContainerRef = useRef<HTMLDivElement>(null);
-  const observedInView = useInView(wrapperRef, { rootMargin: "300px" });
-  const inView = lazy ? observedInView : true;
-
-  const [hovering, setHovering] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const eligible = Boolean(youtubeId) && !reducedMotion;
-  const wantsBackgroundPlayer = mode === "background" && eligible && inView;
-  const wantsHoverPlayer = mode === "hover-preview" && eligible && supportsHover && inView;
-  const wantsClickPlayer = mode === "click-to-play" && eligible && clicked;
-
-  const enabled = wantsBackgroundPlayer || wantsHoverPlayer || wantsClickPlayer;
-
-  const { status, play, pause } = useYouTubePlayer({
-    containerRef: playerContainerRef,
-    videoId: youtubeId,
-    enabled,
-    autoplay: mode !== "hover-preview", // hover mode: cue on view, play only on hover
-    muted: mode !== "click-to-play",
-  });
+  const eligible = Boolean(videoSrc) && !reducedMotion && !failed;
+  const active = mode === "click-to-play" ? clicked && eligible : eligible;
 
   useEffect(() => {
-    if (mode !== "hover-preview" || status === "idle" || status === "loading") return;
-    if (hovering) play();
-    else pause();
-  }, [hovering, mode, status, play, pause]);
+    const el = videoRef.current;
+    if (!el || !active) return;
+
+    if (mode === "background") {
+      el.play().catch(() => setFailed(true));
+    }
+  }, [active, mode]);
 
   function handleEnter() {
-    if (mode !== "hover-preview" || !supportsHover) return;
-    timeoutRef.current = setTimeout(() => setHovering(true), 150);
+    if (mode !== "hover-preview") return;
+    videoRef.current?.play().catch(() => setFailed(true));
   }
   function handleLeave() {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setHovering(false);
+    if (mode !== "hover-preview") return;
+    videoRef.current?.pause();
   }
 
-  const videoVisible = enabled && status === "playing";
+  const videoVisible = active && playing;
 
   return (
     <div
-      ref={wrapperRef}
       className={`relative overflow-hidden ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
@@ -124,18 +85,27 @@ export default function CinematicVideo({
         }`}
       />
 
-      {enabled && (
-        <div
-          className={`absolute inset-0 transition-opacity duration-700 ${
+      {eligible && videoSrc && (mode !== "click-to-play" || clicked) && (
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          poster={posterUrl}
+          muted
+          loop
+          playsInline
+          autoPlay={mode !== "click-to-play"}
+          controls={false}
+          aria-label={title}
+          onPlaying={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onError={() => setFailed(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
             videoVisible ? "opacity-100" : "opacity-0"
           }`}
-          style={{ pointerEvents: mode === "click-to-play" ? "auto" : "none" }}
-        >
-          <div ref={playerContainerRef} className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full" />
-        </div>
+        />
       )}
 
-      {mode === "click-to-play" && !wantsClickPlayer && (
+      {mode === "click-to-play" && !clicked && eligible && (
         <button
           onClick={() => setClicked(true)}
           className="absolute inset-0 flex items-center justify-center group focus-ring"
@@ -146,12 +116,6 @@ export default function CinematicVideo({
             <Play size={20} className="ml-1 text-porcelain group-hover:text-champagne transition-colors" fill="currentColor" />
           </span>
         </button>
-      )}
-
-      {mode === "click-to-play" && wantsClickPlayer && (status === "idle" || status === "loading") && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-8 h-8 rounded-full border border-porcelain/30 border-t-champagne animate-spin" />
-        </div>
       )}
 
       {overlay}

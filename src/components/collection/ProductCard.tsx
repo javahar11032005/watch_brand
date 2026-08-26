@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { formatPrice } from "@/lib/format";
 import { useCartStore } from "@/hooks/useCartStore";
-import CinematicVideo from "@/components/video/CinematicVideo";
 
 export type ProductCardData = {
   id: string;
@@ -19,6 +19,12 @@ export type ProductCardData = {
   variants: Array<{ id: string; priceModifier: number; stock: number; isDefault: boolean }>;
 };
 
+/**
+ * A plain, guaranteed-visible photograph is the card's whole visual layer —
+ * no embedded video here at all, so there is nothing that can fail to load
+ * or render as an empty box. The full cinematic "Watch Film" experience
+ * lives on the product page itself, opened via Explore Watch.
+ */
 export default function ProductCard({ product }: { product: ProductCardData }) {
   const addItem = useCartStore((s) => s.addItem);
   const [adding, setAdding] = useState(false);
@@ -53,18 +59,15 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
     >
       <Link
         href={`/watches/${product.slug}`}
-        className="relative block aspect-square overflow-hidden bg-porcelain-3 focus-ring"
+        className="relative block aspect-square overflow-hidden bg-porcelain-3 focus-ring [perspective:1000px]"
       >
-        <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
-          <CinematicVideo
-            youtubeId={product.videoId}
-            posterUrl={product.heroImageUrl}
-            posterAlt={product.name}
-            mode="hover-preview"
-            className="absolute inset-0"
-            title={product.name}
-          />
-        </div>
+        <Image
+          src={product.heroImageUrl}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:[transform:rotateY(-1.5deg)_scale(1.06)]"
+        />
 
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 

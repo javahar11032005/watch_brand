@@ -14,7 +14,7 @@ export default function FinalCta() {
     <section id="viewing" className="relative py-28 md:py-44 bg-charcoal overflow-hidden">
       <div className="absolute inset-0 opacity-50">
         <CinematicVideo
-          youtubeId={media.hero.youtubeId}
+          videoSrc={media.hero.videoSrc}
           posterUrl={media.hero.posterUrl}
           posterAlt={media.hero.posterAlt}
           mode="background"

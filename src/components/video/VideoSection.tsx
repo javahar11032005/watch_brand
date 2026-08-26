@@ -15,7 +15,7 @@ export default function VideoSection() {
 
         <Reveal delay={0.1}>
           <CinematicVideo
-            youtubeId={media.hero.youtubeId}
+            videoSrc={media.hero.videoSrc}
             posterUrl={media.hero.posterUrl}
             posterAlt={media.hero.posterAlt}
             mode="click-to-play"
@@ -25,7 +25,7 @@ export default function VideoSection() {
         </Reveal>
 
         <p className="mt-4 text-xs text-slate max-w-lg">
-          Placeholder campaign footage, standing in for a client-shot film — swap the video id in{" "}
+          Placeholder campaign footage, standing in for a client-shot film — swap the video file in{" "}
           <code className="text-ink/50">src/data/media.ts</code> at any time.
         </p>
       </div>

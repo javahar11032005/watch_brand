@@ -84,18 +84,21 @@ export const media = {
     } satisfies MediaAsset,
   },
   /**
-   * The single site-level campaign film (hero + "The First Impression").
-   * Per-product campaign clips live on the Product record itself
-   * (`Product.videoId`, nullable) since they're real catalog data, not
-   * brand chrome — components read `product.videoId` directly.
+   * The single site-level campaign film (hero, "The First Impression", and
+   * the shared "Watch Film" clip on every product page) — a real,
+   * self-hosted file under /public/videos, not a YouTube embed, so there is
+   * no third-party branding anywhere in the video experience. Swap the
+   * asset later by replacing the file and/or updating this path; per-
+   * product footage can be added the same way by pointing individual
+   * products at their own file instead of this shared one.
    */
   hero: {
-    youtubeId: "gPGjd34M_cM",
+    videoSrc: "/videos/hero-movement.mp4",
     title: "Kestrel — Time, Refined",
     posterAlt: "Cinematic still from the Kestrel campaign film",
     // A verified, always-loading photograph — the guaranteed visual layer.
-    // The YouTube film plays on top of this once it genuinely starts; if it
-    // never does, this is what stays on screen, not an empty/dark box.
+    // The film plays on top of this once it starts; if it never does
+    // (slow network, missing file), this is what stays on screen.
     posterUrl: unsplash("photo-1598640877587-bd8f35df4021", "q=85&w=2400&auto=format&fit=crop"),
   },
 } as const;
@@ -106,4 +109,15 @@ export function productMedia(slug: string): MediaAsset {
   return (
     (media.products as Record<string, MediaAsset>)[slug] ?? media.products["meridian-one"]
   );
+}
+
+/**
+ * Whether a product has a "Watch Film" is real catalog data
+ * (`Product.videoId`, non-null) — but the actual clip asset is shared brand
+ * footage rather than a distinct file per watch. Give each product its own
+ * file later by branching on `slug` here instead of returning the shared
+ * one.
+ */
+export function productVideoSrc(hasFilm: string | null): string | null {
+  return hasFilm ? media.hero.videoSrc : null;
 }

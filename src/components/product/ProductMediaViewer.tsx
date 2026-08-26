@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Play, Pause, Volume2, VolumeX, Expand, ZoomIn } from "lucide-react";
-import { useYouTubePlayer } from "@/hooks/useYouTubePlayer";
 import ImageLightbox from "./ImageLightbox";
 
 type ProductMediaViewerProps = {
-  youtubeId: string | null;
+  /** Local file under /public, e.g. "/videos/hero-movement.mp4" — never a YouTube id. */
+  videoSrc: string | null;
   posterUrl: string;
   posterAlt: string;
   title: string;
@@ -16,36 +16,29 @@ type ProductMediaViewerProps = {
 
 /**
  * The main product-detail viewer: a square/portrait cinematic frame. When a
- * campaign clip is available it plays on demand with custom play/pause/mute
- * controls and a fullscreen expand — never YouTube's own player chrome
- * (controls are fully custom, driven by the real IFrame Player API so we
- * always know true playback state). When there's no video, the poster
- * becomes a click-to-zoom lightbox image instead. Either way the watch is
- * always visibly on screen; nothing here can render as an empty box.
+ * campaign clip is available it plays on demand with fully custom play/
+ * pause/mute/expand controls over a plain self-hosted <video> element — no
+ * third-party player embed exists here, so there is no branding to fight.
+ * When there's no video, the poster becomes a click-to-zoom lightbox image
+ * instead. Either way the watch is always visibly on screen.
  */
 export default function ProductMediaViewer({
-  youtubeId,
+  videoSrc,
   posterUrl,
   posterAlt,
   title,
   className = "",
 }: ProductMediaViewerProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const playerContainerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [failed, setFailed] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [muted, setMuted] = useState(true);
 
-  const hasVideo = Boolean(youtubeId);
-
-  const { status, play, pause, toggleMute, isMuted } = useYouTubePlayer({
-    containerRef: playerContainerRef,
-    videoId: youtubeId,
-    enabled: hasVideo && started,
-    autoplay: true,
-    muted: true,
-  });
+  const hasVideo = Boolean(videoSrc) && !failed;
 
   useEffect(() => {
     const handler = () => setIsFullscreen(document.fullscreenElement === wrapperRef.current);
@@ -53,9 +46,26 @@ export default function ProductMediaViewer({
     return () => document.removeEventListener("fullscreenchange", handler);
   }, []);
 
-  const playing = status === "playing";
-  const videoVisible = started && playing;
-  const failed = started && status === "error";
+  function handleStart() {
+    setStarted(true);
+    requestAnimationFrame(() => {
+      videoRef.current?.play().catch(() => setFailed(true));
+    });
+  }
+
+  function handleTogglePlay() {
+    const el = videoRef.current;
+    if (!el) return;
+    if (el.paused) el.play().catch(() => setFailed(true));
+    else el.pause();
+  }
+
+  function handleToggleMute() {
+    const el = videoRef.current;
+    if (!el) return;
+    el.muted = !el.muted;
+    setMuted(el.muted);
+  }
 
   function handleToggleFullscreen() {
     if (!wrapperRef.current) return;
@@ -66,10 +76,7 @@ export default function ProductMediaViewer({
     }
   }
 
-  function handleToggleMute() {
-    toggleMute();
-    setMuted(!isMuted());
-  }
+  const videoVisible = started && hasVideo;
 
   return (
     <div
@@ -87,19 +94,28 @@ export default function ProductMediaViewer({
         priority
       />
 
-      {hasVideo && started && (
-        <div
-          className={`absolute inset-0 transition-opacity duration-700 ${videoVisible ? "opacity-100" : "opacity-0"}`}
-        >
-          <div ref={playerContainerRef} className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full" />
-        </div>
+      {hasVideo && videoSrc && started && (
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          poster={posterUrl}
+          muted={muted}
+          loop
+          playsInline
+          controls={false}
+          aria-label={title}
+          onPlaying={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onError={() => setFailed(true)}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       )}
 
       {/* Play button — only before the viewer has ever started, and only when a video actually exists.
           User-initiated by design: the image is the first thing shown, the film is opt-in. */}
-      {hasVideo && !started && !failed && (
+      {hasVideo && !started && (
         <button
-          onClick={() => setStarted(true)}
+          onClick={handleStart}
           className="absolute inset-0 flex flex-col items-center justify-center gap-3 focus-ring"
           aria-label={`Watch the film for ${title}`}
         >
@@ -113,14 +129,8 @@ export default function ProductMediaViewer({
         </button>
       )}
 
-      {hasVideo && started && (status === "idle" || status === "loading") && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-8 h-8 rounded-full border border-ink/20 border-t-brass animate-spin" />
-        </div>
-      )}
-
       {/* No video (or it failed): the poster itself is the zoomable product image */}
-      {(!hasVideo || failed) && (
+      {!hasVideo && (
         <button
           onClick={() => setLightboxOpen(true)}
           className="absolute inset-0 flex items-end justify-end p-4 focus-ring"
@@ -132,11 +142,11 @@ export default function ProductMediaViewer({
         </button>
       )}
 
-      {/* Custom controls — no native YouTube UI is ever shown */}
-      {hasVideo && started && !failed && (
+      {/* Custom controls — a plain <video> element, so there is no native branding to remove */}
+      {hasVideo && started && (
         <div className="absolute bottom-0 inset-x-0 flex items-center gap-3 p-4 bg-gradient-to-t from-charcoal/70 to-transparent opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
           <button
-            onClick={playing ? pause : play}
+            onClick={handleTogglePlay}
             aria-label={playing ? "Pause" : "Play"}
             className="flex items-center justify-center w-9 h-9 rounded-full border border-porcelain/40 text-porcelain hover:border-champagne hover:text-champagne transition-colors focus-ring"
           >

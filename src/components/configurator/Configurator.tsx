@@ -6,6 +6,7 @@ import { formatPrice, labelCaseMaterial, labelDialColor, labelStrapMaterial } fr
 import { useCartStore } from "@/hooks/useCartStore";
 import { Button } from "@/components/ui/Button";
 import ProductMediaViewer from "@/components/product/ProductMediaViewer";
+import { productVideoSrc } from "@/data/media";
 import { useVariantSelector, type SelectableVariant } from "@/hooks/useVariantSelector";
 import {
   CASE_OPTIONS,
@@ -67,7 +68,7 @@ export default function Configurator({ product }: { product: ConfiguratorProduct
     <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
       <div>
         <ProductMediaViewer
-          youtubeId={product.videoId}
+          videoSrc={productVideoSrc(product.videoId)}
           posterUrl={product.heroImageUrl}
           posterAlt={product.name}
           title={product.name}
