@@ -59,17 +59,19 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
     >
       <Link
         href={`/watches/${product.slug}`}
-        className="relative block aspect-square overflow-hidden bg-porcelain-3 focus-ring [perspective:1000px]"
+        className="relative block aspect-square overflow-hidden bg-porcelain-3 focus-ring"
       >
-        <Image
-          src={product.heroImageUrl}
-          alt={product.name}
-          fill
-          sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:[transform:rotateY(-1.5deg)_scale(1.06)]"
-        />
+        <div className="absolute inset-6 md:inset-10">
+          <Image
+            src={product.heroImageUrl}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
+            className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
+        </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {!inStock && (
           <span className="absolute top-4 left-4 text-[10px] tracking-[0.2em] uppercase bg-porcelain/90 text-ink/80 px-2 py-1">
