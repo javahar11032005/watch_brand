@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Play } from "lucide-react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-export type CinematicVideoMode = "background" | "hover-preview" | "click-to-play";
+export type CinematicVideoMode = "background" | "hover-preview" | "click-to-play" | "in-view";
 
 type CinematicVideoProps = {
   /** Local file under /public, e.g. "/videos/hero-movement.mp4". Never a YouTube id — this is a real <video> element, so there is no external branding to fight. */
@@ -40,17 +40,42 @@ export default function CinematicVideo({
   priority = false,
 }: CinematicVideoProps) {
   const reducedMotion = useReducedMotion();
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [inView, setInView] = useState(false);
 
   const eligible = Boolean(videoSrc) && !reducedMotion && !failed;
-  const active = mode === "click-to-play" ? clicked && eligible : eligible;
+  const active =
+    mode === "click-to-play" ? clicked && eligible : mode === "in-view" ? inView && eligible : eligible;
+
+  // "in-view" plays only while the card is actually on screen — scrolling
+  // five autoplaying videos in at once on a grid is both wasteful and, per
+  // browser autoplay heuristics, unreliable. Pauses again once scrolled
+  // past so it doesn't keep decoding off-screen.
+  useEffect(() => {
+    if (mode !== "in-view" || !containerRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.4,
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [mode]);
 
   useEffect(() => {
     const el = videoRef.current;
-    if (!el || !active) return;
+    if (!el) return;
+
+    if (mode === "in-view") {
+      el.muted = true;
+      if (inView) el.play().catch(() => setFailed(true));
+      else el.pause();
+      return;
+    }
+
+    if (!active) return;
 
     if (mode === "background") {
       // Belt-and-suspenders: some browsers gate autoplay on the live DOM
@@ -62,7 +87,7 @@ export default function CinematicVideo({
     if (mode === "background" || mode === "click-to-play") {
       el.play().catch(() => setFailed(true));
     }
-  }, [active, mode]);
+  }, [active, mode, inView]);
 
   function handleEnter() {
     if (mode !== "hover-preview") return;
@@ -77,6 +102,7 @@ export default function CinematicVideo({
 
   return (
     <div
+      ref={containerRef}
       className={`relative overflow-hidden ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
@@ -100,7 +126,7 @@ export default function CinematicVideo({
           muted={mode !== "click-to-play"}
           loop
           playsInline
-          autoPlay={mode !== "click-to-play"}
+          autoPlay={mode === "background"}
           controls={false}
           aria-label={title}
           onPlaying={() => setPlaying(true)}

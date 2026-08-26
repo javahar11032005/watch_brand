@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { formatPrice } from "@/lib/format";
 import { useCartStore } from "@/hooks/useCartStore";
+import CinematicVideo from "@/components/video/CinematicVideo";
+import { productVideoSrc } from "@/data/media";
 
 export type ProductCardData = {
   id: string;
@@ -20,10 +21,11 @@ export type ProductCardData = {
 };
 
 /**
- * A plain, guaranteed-visible photograph is the card's whole visual layer —
- * no embedded video here at all, so there is nothing that can fail to load
- * or render as an empty box. The full cinematic "Watch Film" experience
- * lives on the product page itself, opened via Explore Watch.
+ * Each card plays that watch's own cinematic clip once scrolled into view
+ * (mode="in-view"), pausing again when it scrolls past — never all five at
+ * once. The product photo is still wired in as the poster, so a slow
+ * network or a missing file always falls back to a real photograph instead
+ * of an empty box; it just isn't the primary visual anymore.
  */
 export default function ProductCard({ product }: { product: ProductCardData }) {
   const addItem = useCartStore((s) => s.addItem);
@@ -61,17 +63,18 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
         href={`/watches/${product.slug}`}
         className="relative block aspect-square overflow-hidden bg-porcelain-3 focus-ring"
       >
-        <div className="absolute inset-6 md:inset-10">
-          <Image
-            src={product.heroImageUrl}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
-            className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+        <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
+          <CinematicVideo
+            videoSrc={productVideoSrc(product.videoId, product.slug)}
+            posterUrl={product.heroImageUrl}
+            posterAlt={product.name}
+            mode="in-view"
+            title={product.name}
+            className="absolute inset-0"
           />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {!inStock && (
           <span className="absolute top-4 left-4 text-[10px] tracking-[0.2em] uppercase bg-porcelain/90 text-ink/80 px-2 py-1">
