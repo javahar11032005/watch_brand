@@ -52,7 +52,7 @@ export default function CinematicVideo({
     const el = videoRef.current;
     if (!el || !active) return;
 
-    if (mode === "background") {
+    if (mode === "background" || mode === "click-to-play") {
       el.play().catch(() => setFailed(true));
     }
   }, [active, mode]);
@@ -90,7 +90,7 @@ export default function CinematicVideo({
           ref={videoRef}
           src={videoSrc}
           poster={posterUrl}
-          muted
+          muted={mode !== "click-to-play"}
           loop
           playsInline
           autoPlay={mode !== "click-to-play"}
