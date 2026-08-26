@@ -45,11 +45,6 @@ export const media = {
       credit: "Mauro Lima on Unsplash",
       alt: "Black and silver chronograph watch",
     } satisfies MediaAsset,
-    "meridian-atelier": {
-      url: unsplash("photo-1760532466984-39c3eb7f1254"),
-      credit: "Unsplash",
-      alt: "Gold-toned minimalist watch worn on the wrist",
-    } satisfies MediaAsset,
     "meridian-automatic": {
       url: unsplash("photo-1578934856768-78cbeac965c7"),
       credit: "Aaron Burden on Unsplash",
@@ -93,7 +88,7 @@ export const media = {
    * products at their own file instead of this shared one.
    */
   hero: {
-    videoSrc: "/videos/hero-movement.mp4",
+    videoSrc: "/videos/watches/homepage.mp4",
     title: "Kestrel — Time, Refined",
     posterAlt: "Cinematic still from the Kestrel campaign film",
     // A verified, always-loading photograph — the guaranteed visual layer.

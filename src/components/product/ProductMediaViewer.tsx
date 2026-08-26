@@ -6,7 +6,7 @@ import { Play, Pause, Volume2, VolumeX, Expand, ZoomIn, X } from "lucide-react";
 import ImageLightbox from "./ImageLightbox";
 
 type ProductMediaViewerProps = {
-  /** Local file under /public, e.g. "/videos/hero-movement.mp4" — never a YouTube id. */
+  /** Local file under /public, e.g. "/videos/watches/homepage.mp4" — never a YouTube id. */
   videoSrc: string | null;
   posterUrl: string;
   posterAlt: string;

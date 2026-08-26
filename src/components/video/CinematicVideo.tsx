@@ -8,7 +8,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 export type CinematicVideoMode = "background" | "hover-preview" | "click-to-play" | "in-view";
 
 type CinematicVideoProps = {
-  /** Local file under /public, e.g. "/videos/hero-movement.mp4". Never a YouTube id — this is a real <video> element, so there is no external branding to fight. */
+  /** Local file under /public, e.g. "/videos/watches/homepage.mp4". Never a YouTube id — this is a real <video> element, so there is no external branding to fight. */
   videoSrc?: string | null;
   posterUrl: string;
   posterAlt: string;

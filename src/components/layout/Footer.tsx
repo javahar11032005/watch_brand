@@ -18,7 +18,7 @@ const COLUMNS = [
       { label: "Meridian One", href: "/watches/meridian-one" },
       { label: "Meridian Nocturne", href: "/watches/meridian-nocturne" },
       { label: "Meridian Chrono", href: "/watches/meridian-chrono" },
-      { label: "Meridian Atelier", href: "/watches/meridian-atelier" },
+      { label: "Meridian Automatic", href: "/watches/meridian-automatic" },
     ],
   },
   {

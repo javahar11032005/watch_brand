@@ -1,9 +1,7 @@
 import Hero from "@/components/hero/Hero";
-import VideoSection from "@/components/video/VideoSection";
-import OurStory from "@/components/story/OurStory";
+import BrandPhilosophy from "@/components/story/BrandPhilosophy";
 import PrecisionStats from "@/components/craftsmanship/PrecisionStats";
 import CollectionTeaser from "@/components/collection/CollectionTeaser";
-import ConfiguratorSection from "@/components/configurator/ConfiguratorSection";
 import FinalCta from "@/components/hero/FinalCta";
 
 export const revalidate = 60;
@@ -12,11 +10,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <VideoSection />
-      <OurStory />
+      <BrandPhilosophy />
       <PrecisionStats />
       <CollectionTeaser />
-      <ConfiguratorSection />
       <FinalCta />
     </>
   );

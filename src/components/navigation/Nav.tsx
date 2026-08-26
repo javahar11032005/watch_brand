@@ -11,7 +11,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 const LINKS = [
   { label: "Collection", href: "/collection" },
   { label: "Our Story", href: "/#story" },
-  { label: "Atelier", href: "/#configurator" },
+  { label: "Precision", href: "/#precision" },
 ];
 
 export default function Nav() {

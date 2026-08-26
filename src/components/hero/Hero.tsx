@@ -70,19 +70,13 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.75 }}
-          className="mt-10 flex flex-col sm:flex-row items-center gap-4"
+          className="mt-10"
         >
           <Link
             href="/collection"
             className="px-7 py-3.5 text-xs tracking-[0.2em] uppercase bg-ivory text-charcoal hover:bg-champagne transition-colors focus-ring"
           >
             Explore the Collection
-          </Link>
-          <Link
-            href="#story"
-            className="px-7 py-3.5 text-xs tracking-[0.2em] uppercase border border-ivory/30 hover:border-champagne hover:text-champagne transition-colors focus-ring"
-          >
-            Discover the Craft
           </Link>
         </motion.div>
       </div>

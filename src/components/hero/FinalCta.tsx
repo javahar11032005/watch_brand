@@ -19,7 +19,7 @@ export default function FinalCta() {
           posterAlt={media.hero.posterAlt}
           mode="background"
           className="absolute inset-0"
-          title="Meridian Atelier"
+          title={media.hero.title}
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/70 to-charcoal/40" />
