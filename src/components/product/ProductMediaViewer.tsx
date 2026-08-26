@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Play, Pause, Volume2, VolumeX, Expand, ZoomIn } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Expand, ZoomIn, X } from "lucide-react";
 import ImageLightbox from "./ImageLightbox";
 
 type ProductMediaViewerProps = {
@@ -53,6 +53,12 @@ export default function ProductMediaViewer({
     });
   }
 
+  function handleClose() {
+    videoRef.current?.pause();
+    setStarted(false);
+    setPlaying(false);
+  }
+
   function handleTogglePlay() {
     const el = videoRef.current;
     if (!el) return;
@@ -85,31 +91,33 @@ export default function ProductMediaViewer({
         isFullscreen ? "flex items-center justify-center bg-charcoal" : ""
       } ${className}`}
     >
-      <Image
-        src={posterUrl}
-        alt={posterAlt}
-        fill
-        sizes="(max-width: 768px) 100vw, 50vw"
-        className={`object-cover transition-opacity duration-700 ${videoVisible ? "opacity-0" : "opacity-100"}`}
-        priority
-      />
-
-      {hasVideo && videoSrc && started && (
-        <video
-          ref={videoRef}
-          src={videoSrc}
-          poster={posterUrl}
-          muted={muted}
-          loop
-          playsInline
-          controls={false}
-          aria-label={title}
-          onPlaying={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onError={() => setFailed(true)}
-          className="absolute inset-0 w-full h-full object-cover"
+      <div className={`absolute ${isFullscreen ? "inset-0" : "inset-6 md:inset-10"}`}>
+        <Image
+          src={posterUrl}
+          alt={posterAlt}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className={`object-contain transition-opacity duration-700 ${videoVisible ? "opacity-0" : "opacity-100"}`}
+          priority
         />
-      )}
+
+        {hasVideo && videoSrc && started && (
+          <video
+            ref={videoRef}
+            src={videoSrc}
+            poster={posterUrl}
+            muted={muted}
+            loop
+            playsInline
+            controls={false}
+            aria-label={title}
+            onPlaying={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            onError={() => setFailed(true)}
+            className="absolute inset-0 w-full h-full object-contain transition-opacity duration-700 opacity-100"
+          />
+        )}
+      </div>
 
       {/* Play button — only before the viewer has ever started, and only when a video actually exists.
           User-initiated by design: the image is the first thing shown, the film is opt-in. */}
@@ -166,6 +174,13 @@ export default function ProductMediaViewer({
             className="flex items-center justify-center w-9 h-9 rounded-full border border-porcelain/40 text-porcelain hover:border-champagne hover:text-champagne transition-colors focus-ring"
           >
             <Expand size={14} />
+          </button>
+          <button
+            onClick={handleClose}
+            aria-label="Close film"
+            className="flex items-center justify-center w-9 h-9 rounded-full border border-porcelain/40 text-porcelain hover:border-champagne hover:text-champagne transition-colors focus-ring"
+          >
+            <X size={14} />
           </button>
         </div>
       )}
