@@ -58,11 +58,15 @@ const IMG = {
 
 // YouTube video ids used as campaign/product references — see src/data/media.ts
 // for the single place these get swapped for client-provided footage later.
+// Non-null values are just a "this product has a Watch Film" flag —
+// productVideoSrc() maps the product's slug to its own local mp4 under
+// /public/videos/watches, it does not use these strings as literal ids.
 const VIDEO_IDS = {
   meridianOne: "ZQLN2LVZKzo",
   meridianNocturne: "oNWCa4BZDkY",
   meridianChrono: "7BPiU_TMo00",
   meridianAtelier: "ELodtdn2MlU",
+  meridianAutomatic: "kQ8Gk9CBu6E",
 };
 
 const PRODUCTS = [
@@ -222,7 +226,7 @@ const PRODUCTS = [
     complications: ["Date"],
     heroImageUrl: IMG.meridianAutomatic,
     galleryImageUrls: [IMG.meridianAutomatic, IMG.gears],
-    videoId: null,
+    videoId: VIDEO_IDS.meridianAutomatic,
     isFeatured: true,
     defaultCombo: { caseMaterial: "STEEL", dialColor: "SILVER", strapMaterial: "LEATHER" },
   },

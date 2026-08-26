@@ -112,12 +112,21 @@ export function productMedia(slug: string): MediaAsset {
 }
 
 /**
- * Whether a product has a "Watch Film" is real catalog data
- * (`Product.videoId`, non-null) — but the actual clip asset is shared brand
- * footage rather than a distinct file per watch. Give each product its own
- * file later by branching on `slug` here instead of returning the shared
- * one.
+ * Each watch has its own distinct "Watch Film" clip under
+ * /public/videos/watches — never the shared hero campaign film. Add a new
+ * product's footage by dropping a file in that folder and adding its slug
+ * here; a slug with no entry falls back to the shared hero clip rather than
+ * showing nothing.
  */
-export function productVideoSrc(hasFilm: string | null): string | null {
-  return hasFilm ? media.hero.videoSrc : null;
+const PRODUCT_VIDEO_BY_SLUG: Record<string, string> = {
+  "meridian-one": "/videos/watches/meridian-one.mp4",
+  "meridian-nocturne": "/videos/watches/meridian-nocturne.mp4",
+  "meridian-chrono": "/videos/watches/meridian-chrono.mp4",
+  "meridian-atelier": "/videos/watches/meridian-atelier.mp4",
+  "meridian-automatic": media.hero.videoSrc,
+};
+
+export function productVideoSrc(hasFilm: string | null, slug?: string): string | null {
+  if (!hasFilm) return null;
+  return (slug && PRODUCT_VIDEO_BY_SLUG[slug]) || media.hero.videoSrc;
 }

@@ -39,7 +39,7 @@ export default async function WatchPage({ params }: PageProps) {
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 mb-28 md:mb-36">
           <ProductMediaViewer
-            videoSrc={productVideoSrc(product.videoId)}
+            videoSrc={productVideoSrc(product.videoId, product.slug)}
             posterUrl={product.heroImageUrl}
             posterAlt={product.name}
             title={product.name}

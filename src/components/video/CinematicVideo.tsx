@@ -52,6 +52,13 @@ export default function CinematicVideo({
     const el = videoRef.current;
     if (!el || !active) return;
 
+    if (mode === "background") {
+      // Belt-and-suspenders: some browsers gate autoplay on the live DOM
+      // property rather than the initial `muted` attribute, so set it
+      // explicitly right before play() instead of trusting JSX alone.
+      el.muted = true;
+    }
+
     if (mode === "background" || mode === "click-to-play") {
       el.play().catch(() => setFailed(true));
     }

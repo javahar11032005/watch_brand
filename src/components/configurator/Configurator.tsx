@@ -68,7 +68,7 @@ export default function Configurator({ product }: { product: ConfiguratorProduct
     <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
       <div>
         <ProductMediaViewer
-          videoSrc={productVideoSrc(product.videoId)}
+          videoSrc={productVideoSrc(product.videoId, product.slug)}
           posterUrl={product.heroImageUrl}
           posterAlt={product.name}
           title={product.name}
