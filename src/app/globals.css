@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+:root {
+  /* Cinematic dark — reserved for the hero film, the pinned craft sequence,
+     and the final ownership CTA. Soft midnight navy, not near-black. */
+  --charcoal: #141a22;
+  --charcoal-2: #1b232d;
+  --charcoal-3: #232c37;
+
+  /* Warm porcelain — the site's primary surface. */
+  --porcelain: #f5f1e7;
+  --porcelain-2: #ece5d4;
+  --porcelain-3: #e1d8c3;
+
+  /* Text */
+  --ivory: #f2efe8; /* light text, used on dark sections */
+  --white-soft: #faf9f6;
+  --ink: #2a2723; /* warm charcoal text, used on light sections */
+  --slate: #6f6a61; /* muted secondary text on light sections */
+
+  /* Accents */
+  --champagne: #cdb583; /* accent on dark sections */
+  --brass: #8a6a3f; /* accent on light sections, deeper for contrast */
+  --silver: #b7bec3;
+  --gray-muted: #858b8f;
+
+  /* Borders */
+  --line: rgba(242, 239, 232, 0.12); /* on dark sections */
+  --taupe: #d9cfba; /* on light sections */
+}
+
+@theme inline {
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-2: var(--charcoal-2);
+  --color-charcoal-3: var(--charcoal-3);
+  --color-porcelain: var(--porcelain);
+  --color-porcelain-2: var(--porcelain-2);
+  --color-porcelain-3: var(--porcelain-3);
+  --color-ivory: var(--ivory);
+  --color-white-soft: var(--white-soft);
+  --color-ink: var(--ink);
+  --color-slate: var(--slate);
+  --color-champagne: var(--champagne);
+  --color-brass: var(--brass);
+  --color-silver: var(--silver);
+  --color-gray-muted: var(--gray-muted);
+  --color-line: var(--line);
+  --color-taupe: var(--taupe);
+
+  --font-serif: var(--font-serif-ui), ui-serif, Georgia, serif;
+  --font-sans: var(--font-sans-ui), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+* {
+  border-color: var(--color-taupe);
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--color-porcelain);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: var(--color-brass);
+  color: var(--color-porcelain);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Thin, low-contrast scrollbar to match the restrained aesthetic */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-porcelain);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-taupe);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 1px solid var(--color-brass);
+  outline-offset: 4px;
+}
