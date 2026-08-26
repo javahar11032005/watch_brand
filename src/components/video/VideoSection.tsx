@@ -1,7 +1,6 @@
 import Reveal from "@/components/ui/Reveal";
 import CinematicVideo from "@/components/video/CinematicVideo";
 import { media } from "@/data/media";
-import { youtubeThumbnail } from "@/lib/youtube";
 
 export default function VideoSection() {
   return (
@@ -17,7 +16,7 @@ export default function VideoSection() {
         <Reveal delay={0.1}>
           <CinematicVideo
             youtubeId={media.hero.youtubeId}
-            posterUrl={youtubeThumbnail(media.hero.youtubeId)}
+            posterUrl={media.hero.posterUrl}
             posterAlt={media.hero.posterAlt}
             mode="click-to-play"
             title={media.hero.title}

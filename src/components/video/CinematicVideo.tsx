@@ -32,6 +32,13 @@ type CinematicVideoProps = {
   overlay?: React.ReactNode;
   title?: string;
   priority?: boolean;
+  /**
+   * Set false for anything that must start the instant it mounts (the
+   * hero) — skips the IntersectionObserver gate entirely. Defaults to
+   * true (lazy) for everything below the fold, per the "don't autoplay
+   * everything at once" performance requirement.
+   */
+  lazy?: boolean;
 };
 
 /**
@@ -54,12 +61,14 @@ export default function CinematicVideo({
   overlay,
   title = "Kestrel Watch Co.",
   priority = false,
+  lazy = true,
 }: CinematicVideoProps) {
   const reducedMotion = useReducedMotion();
   const supportsHover = useSupportsHover();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(wrapperRef, { rootMargin: "300px" });
+  const observedInView = useInView(wrapperRef, { rootMargin: "300px" });
+  const inView = lazy ? observedInView : true;
 
   const [hovering, setHovering] = useState(false);
   const [clicked, setClicked] = useState(false);
@@ -78,7 +87,6 @@ export default function CinematicVideo({
     enabled,
     autoplay: mode !== "hover-preview", // hover mode: cue on view, play only on hover
     muted: mode !== "click-to-play",
-    loop: mode !== "click-to-play",
   });
 
   useEffect(() => {

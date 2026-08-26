@@ -45,7 +45,6 @@ export default function ProductMediaViewer({
     enabled: hasVideo && started,
     autoplay: true,
     muted: true,
-    loop: true,
   });
 
   useEffect(() => {
@@ -96,16 +95,20 @@ export default function ProductMediaViewer({
         </div>
       )}
 
-      {/* Play button — only before the viewer has ever started, and only when a video actually exists */}
+      {/* Play button — only before the viewer has ever started, and only when a video actually exists.
+          User-initiated by design: the image is the first thing shown, the film is opt-in. */}
       {hasVideo && !started && !failed && (
         <button
           onClick={() => setStarted(true)}
-          className="absolute inset-0 flex items-center justify-center focus-ring"
-          aria-label={`Play ${title}`}
+          className="absolute inset-0 flex flex-col items-center justify-center gap-3 focus-ring"
+          aria-label={`Watch the film for ${title}`}
         >
-          <div className="absolute inset-0 bg-charcoal/15 group-hover:bg-charcoal/25 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-charcoal/10 group-hover:bg-charcoal/20 transition-colors duration-300" />
           <span className="relative z-10 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full border border-porcelain/60 group-hover:border-champagne group-hover:scale-105 transition-all duration-300 bg-charcoal/50 backdrop-blur-sm">
             <Play size={20} className="ml-1 text-porcelain" fill="currentColor" />
+          </span>
+          <span className="relative z-10 text-[10px] tracking-[0.25em] uppercase text-porcelain bg-charcoal/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            Watch Film
           </span>
         </button>
       )}

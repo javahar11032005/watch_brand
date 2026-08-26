@@ -11,7 +11,6 @@ type UseYouTubePlayerOptions = {
   enabled: boolean;
   autoplay?: boolean;
   muted?: boolean;
-  loop?: boolean;
   /** How long to wait for onReady before treating this as a failed embed. */
   readyTimeoutMs?: number;
 };
@@ -31,7 +30,6 @@ export function useYouTubePlayer({
   enabled,
   autoplay = false,
   muted = true,
-  loop = false,
   readyTimeoutMs = 7000,
 }: UseYouTubePlayerOptions) {
   const [status, setStatus] = useState<YouTubePlayerStatus>("idle");
@@ -60,8 +58,11 @@ export function useYouTubePlayer({
           playerVars: {
             autoplay: autoplay ? 1 : 0,
             mute: muted ? 1 : 0,
-            loop: loop ? 1 : 0,
-            playlist: loop ? videoId : undefined,
+            // Always loop the underlying player — even in click-to-play —
+            // so a finished video never falls through to YouTube's own
+            // end-card / related-videos UI, which we can't style away.
+            loop: 1,
+            playlist: videoId,
             controls: 0,
             modestbranding: 1,
             playsinline: 1,
@@ -69,6 +70,7 @@ export function useYouTubePlayer({
             fs: 0,
             disablekb: 1,
             iv_load_policy: 3,
+            origin: window.location.origin,
           },
           events: {
             onReady: () => {
@@ -82,7 +84,10 @@ export function useYouTubePlayer({
               if (cancelled) return;
               if (event.data === YTNamespace.PlayerState.PLAYING) setStatus("playing");
               else if (event.data === YTNamespace.PlayerState.PAUSED) setStatus("paused");
-              else if (event.data === YTNamespace.PlayerState.ENDED && loop) {
+              else if (event.data === YTNamespace.PlayerState.ENDED) {
+                // Backup for the native loop=1/playlist looping above —
+                // never let a click-to-play film fall through to YouTube's
+                // own end-card / related-videos screen.
                 player.seekTo(0, true);
                 player.playVideo();
               }
@@ -109,7 +114,7 @@ export function useYouTubePlayer({
       setStatus("idle");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, videoId, autoplay, muted, loop]);
+  }, [enabled, videoId, autoplay, muted]);
 
   return {
     status,

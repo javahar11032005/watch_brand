@@ -6,7 +6,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import CinematicVideo from "@/components/video/CinematicVideo";
 import { media } from "@/data/media";
-import { youtubeThumbnail } from "@/lib/youtube";
+
+function scrollToNextSection() {
+  const hero = document.getElementById("hero");
+  const next = hero?.nextElementSibling as HTMLElement | null;
+  next?.scrollIntoView({ behavior: "smooth" });
+}
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -15,16 +20,21 @@ export default function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   return (
-    <section ref={sectionRef} className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-charcoal">
+    <section
+      id="hero"
+      ref={sectionRef}
+      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-charcoal"
+    >
       <motion.div className="absolute inset-0" style={{ scale, opacity }}>
         <CinematicVideo
           youtubeId={media.hero.youtubeId}
-          posterUrl={youtubeThumbnail(media.hero.youtubeId)}
+          posterUrl={media.hero.posterUrl}
           posterAlt={media.hero.posterAlt}
           mode="background"
           className="absolute inset-0"
           title={media.hero.title}
           priority
+          lazy={false}
         />
       </motion.div>
 
@@ -54,7 +64,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.55 }}
           className="mt-6 max-w-md text-sm md:text-base text-ivory/70 leading-relaxed"
         >
-          Precision, craftsmanship and modern mechanical watchmaking.
+          Precision, craftsmanship and the quiet art of mechanical watchmaking.
         </motion.p>
 
         <motion.div
@@ -78,14 +88,17 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <motion.div
+      <motion.button
+        onClick={scrollToNextSection}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-ivory/50"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-ivory/50 hover:text-ivory/80 transition-colors focus-ring"
+        aria-label="Scroll to explore"
       >
-        <ChevronDown size={22} strokeWidth={1} className="animate-bounce" />
-      </motion.div>
+        <span className="text-[10px] tracking-[0.3em] uppercase">Scroll to Explore</span>
+        <ChevronDown size={20} strokeWidth={1} className="animate-bounce" />
+      </motion.button>
     </section>
   );
 }

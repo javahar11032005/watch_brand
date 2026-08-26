@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { formatPrice } from "@/lib/format";
 import { useCartStore } from "@/hooks/useCartStore";
 import CinematicVideo from "@/components/video/CinematicVideo";
-import { youtubeThumbnail } from "@/lib/youtube";
 
 export type ProductCardData = {
   id: string;
@@ -59,7 +58,7 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
         <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
           <CinematicVideo
             youtubeId={product.videoId}
-            posterUrl={product.videoId ? youtubeThumbnail(product.videoId) : product.heroImageUrl}
+            posterUrl={product.heroImageUrl}
             posterAlt={product.name}
             mode="hover-preview"
             className="absolute inset-0"

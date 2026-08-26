@@ -5,7 +5,6 @@ import Reveal from "@/components/ui/Reveal";
 import { Button, LinkButton } from "@/components/ui/Button";
 import CinematicVideo from "@/components/video/CinematicVideo";
 import { media } from "@/data/media";
-import { youtubeThumbnail } from "@/lib/youtube";
 
 export default function FinalCta() {
   const [requested, setRequested] = useState(false);
@@ -16,7 +15,7 @@ export default function FinalCta() {
       <div className="absolute inset-0 opacity-50">
         <CinematicVideo
           youtubeId={media.hero.youtubeId}
-          posterUrl={youtubeThumbnail(media.hero.youtubeId)}
+          posterUrl={media.hero.posterUrl}
           posterAlt={media.hero.posterAlt}
           mode="background"
           className="absolute inset-0"

@@ -51,7 +51,7 @@ const IMG = {
   meridianNocturne: "https://images.unsplash.com/photo-1567093322102-6bdd32fba67d?q=80&w=2000&auto=format&fit=crop",
   meridianChrono: "https://images.unsplash.com/photo-1598640877587-bd8f35df4021?q=80&w=2000&auto=format&fit=crop",
   meridianAtelier: "https://images.unsplash.com/photo-1760532466984-39c3eb7f1254?q=80&w=2000&auto=format&fit=crop",
-  meridianSolstice: "https://images.unsplash.com/photo-1578934856768-78cbeac965c7?q=80&w=2000&auto=format&fit=crop",
+  meridianAutomatic: "https://images.unsplash.com/photo-1578934856768-78cbeac965c7?q=80&w=2000&auto=format&fit=crop",
   gears: "https://images.unsplash.com/photo-1567093322102-6bdd32fba67d?q=80&w=2000&auto=format&fit=crop",
   movement: "https://images.unsplash.com/photo-1633451238208-11c8e6c1fed4?q=80&w=2000&auto=format&fit=crop",
 };
@@ -195,13 +195,13 @@ const PRODUCTS = [
     defaultCombo: { caseMaterial: "ROSE_GOLD", dialColor: "IVORY", strapMaterial: "LEATHER" },
   },
   {
-    slug: "meridian-solstice",
-    name: "Meridian Solstice",
+    slug: "meridian-automatic",
+    name: "Meridian Automatic",
     subtitle: "The lightest expression of the house",
     description:
-      "A slimmer, quieter reference for daily wear — Solstice trades presence for proportion, built for the wrist that wears a watch every day rather than for occasion.",
+      "A slimmer, quieter reference for daily wear — Automatic trades presence for proportion, built for the wrist that wears a watch every day rather than for occasion.",
     story:
-      "Solstice came out of a simple complaint from the workshop's own watchmakers: Meridian One, worn every day, started to feel like a decision rather than a habit. Solstice is ten percent smaller and two millimetres thinner, with a dial texture borrowed from Atelier but none of its complication — an everyday watch that still says something.",
+      "Meridian Automatic came out of a simple complaint from the workshop's own watchmakers: Meridian One, worn every day, started to feel like a decision rather than a habit. Automatic is ten percent smaller and two millimetres thinner, with a dial texture borrowed from Atelier but none of its complication — an everyday watch that still says something.",
     collectionKey: "meridian",
     basePrice: 420_000,
     currency: "usd",
@@ -220,8 +220,8 @@ const PRODUCTS = [
     strapClasp: "Pin Buckle, Polished Steel",
     strapFinish: "Fine-Grain Calfskin Edge",
     complications: ["Date"],
-    heroImageUrl: IMG.meridianSolstice,
-    galleryImageUrls: [IMG.meridianSolstice, IMG.gears],
+    heroImageUrl: IMG.meridianAutomatic,
+    galleryImageUrls: [IMG.meridianAutomatic, IMG.gears],
     videoId: null,
     isFeatured: true,
     defaultCombo: { caseMaterial: "STEEL", dialColor: "SILVER", strapMaterial: "LEATHER" },

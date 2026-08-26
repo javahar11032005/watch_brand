@@ -50,7 +50,7 @@ export const media = {
       credit: "Unsplash",
       alt: "Gold-toned minimalist watch worn on the wrist",
     } satisfies MediaAsset,
-    "meridian-solstice": {
+    "meridian-automatic": {
       url: unsplash("photo-1578934856768-78cbeac965c7"),
       credit: "Aaron Burden on Unsplash",
       alt: "Round watch with a silver case and dark dial",
@@ -93,6 +93,10 @@ export const media = {
     youtubeId: "gPGjd34M_cM",
     title: "Kestrel — Time, Refined",
     posterAlt: "Cinematic still from the Kestrel campaign film",
+    // A verified, always-loading photograph — the guaranteed visual layer.
+    // The YouTube film plays on top of this once it genuinely starts; if it
+    // never does, this is what stays on screen, not an empty/dark box.
+    posterUrl: unsplash("photo-1598640877587-bd8f35df4021", "q=85&w=2400&auto=format&fit=crop"),
   },
 } as const;
 

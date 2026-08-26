@@ -6,7 +6,6 @@ import { formatPrice, labelCaseMaterial, labelDialColor, labelStrapMaterial } fr
 import { useCartStore } from "@/hooks/useCartStore";
 import { Button } from "@/components/ui/Button";
 import ProductMediaViewer from "@/components/product/ProductMediaViewer";
-import { youtubeThumbnail } from "@/lib/youtube";
 import { useVariantSelector, type SelectableVariant } from "@/hooks/useVariantSelector";
 import {
   CASE_OPTIONS,
@@ -69,7 +68,7 @@ export default function Configurator({ product }: { product: ConfiguratorProduct
       <div>
         <ProductMediaViewer
           youtubeId={product.videoId}
-          posterUrl={product.videoId ? youtubeThumbnail(product.videoId) : product.heroImageUrl}
+          posterUrl={product.heroImageUrl}
           posterAlt={product.name}
           title={product.name}
         />

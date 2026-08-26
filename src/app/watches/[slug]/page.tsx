@@ -6,7 +6,6 @@ import ProductBuyBox from "@/components/product/ProductBuyBox";
 import DetailedSpecSection from "@/components/product/DetailedSpecSection";
 import ProductStorySection from "@/components/product/ProductStorySection";
 import RelatedWatches from "@/components/collection/RelatedWatches";
-import { youtubeThumbnail } from "@/lib/youtube";
 import { media } from "@/data/media";
 
 export const revalidate = 60;
@@ -41,7 +40,7 @@ export default async function WatchPage({ params }: PageProps) {
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 mb-28 md:mb-36">
           <ProductMediaViewer
             youtubeId={product.videoId}
-            posterUrl={product.videoId ? youtubeThumbnail(product.videoId) : product.heroImageUrl}
+            posterUrl={product.heroImageUrl}
             posterAlt={product.name}
             title={product.name}
           />
