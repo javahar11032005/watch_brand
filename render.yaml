@@ -18,8 +18,11 @@ services:
           property: connectionString
       - key: SESSION_SECRET
         generateValue: true
-      - key: NODE_ENV
-        value: production
+      # Deliberately no NODE_ENV var here — Next.js already runs in
+      # production mode via `next start`, and setting NODE_ENV=production
+      # as an env var makes `npm install` skip devDependencies during the
+      # BUILD too (tailwindcss, @tailwindcss/postcss, typescript), which
+      # breaks `next build`.
       - key: NEXT_PUBLIC_SITE_URL
         sync: false
       - key: STRIPE_SECRET_KEY
