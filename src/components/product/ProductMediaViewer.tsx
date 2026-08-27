@@ -33,7 +33,10 @@ export default function ProductMediaViewer({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
+  // Starts unmuted: clicking "Watch Film" is itself a deliberate user
+  // gesture, unlike an ambient autoplay background clip, so sound is
+  // expected without an extra manual unmute step.
+  const [muted, setMuted] = useState(false);
   const [failed, setFailed] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -91,13 +94,13 @@ export default function ProductMediaViewer({
         isFullscreen ? "flex items-center justify-center bg-charcoal" : ""
       } ${className}`}
     >
-      <div className={`absolute ${isFullscreen ? "inset-0" : "inset-6 md:inset-10"}`}>
+      <div className="absolute inset-0">
         <Image
           src={posterUrl}
           alt={posterAlt}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className={`object-contain transition-opacity duration-700 ${videoVisible ? "opacity-0" : "opacity-100"}`}
+          className={`object-cover object-center transition-opacity duration-700 ${videoVisible ? "opacity-0" : "opacity-100"}`}
           priority
         />
 
@@ -114,7 +117,7 @@ export default function ProductMediaViewer({
             onPlaying={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
             onError={() => setFailed(true)}
-            className="absolute inset-0 w-full h-full object-contain transition-opacity duration-700 opacity-100"
+            className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 opacity-100"
           />
         )}
       </div>
