@@ -27,7 +27,7 @@ export default function FinalCta() {
       <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
         <Reveal>
           <p className="text-xs tracking-[0.3em] uppercase text-champagne mb-6">Ownership</p>
-          <h2 className="font-serif text-4xl md:text-6xl leading-tight text-balance mb-6">
+          <h2 className="font-serif text-4xl md:text-6xl leading-tight text-balance mb-6 text-champagne">
             Own a moment that lasts.
           </h2>
           <p className="text-ivory/70 leading-relaxed mb-10 max-w-md mx-auto">
