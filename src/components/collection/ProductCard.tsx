@@ -66,7 +66,7 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
           alt={product.name}
           fill
           sizes="(max-width: 768px) 90vw, (max-width: 1200px) 45vw, 30vw"
-          className="object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.04]"
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
