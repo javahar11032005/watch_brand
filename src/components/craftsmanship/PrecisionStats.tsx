@@ -4,7 +4,7 @@ import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import { media } from "@/data/media";
 
 const STATS = [
-  { value: 60, suffix: " HRS", label: "Power reserve, Meridian Nocturne" },
+  { value: 72, suffix: " HRS", label: "Power reserve, Meridian Atelier" },
   { value: 128, suffix: "", label: "Mechanical components, base movement" },
   { value: 10, suffix: " ATM", label: "Water resistance, Nocturne & Chrono" },
   { value: 6, suffix: "", label: "Positions regulated before shipping" },
